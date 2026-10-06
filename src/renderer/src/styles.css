@@ -2317,3 +2317,41 @@ select:disabled {
 .art-chip svg {
   color: var(--accent);
 }
+
+/* ---------- Claude connector (Settings) ---------- */
+.connector-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+}
+.connector-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 550;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.connector-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  flex-shrink: 0;
+}
+.connector-state.connected {
+  color: var(--accent);
+}
+.connector-state.connected .connector-dot {
+  background: var(--accent);
+}
+.connector-state.needsUpdate .connector-dot {
+  background: var(--c3);
+}
+.connector-note {
+  margin-top: -6px;
+  padding-bottom: 16px;
+}

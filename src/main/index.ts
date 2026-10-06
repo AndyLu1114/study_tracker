@@ -6,7 +6,9 @@ import { StudyHost, type TimerCommand } from '../shared/host'
 import { t } from '../shared/i18n'
 import { emptyData, normalizeData, type StoreOp } from '../shared/store'
 import type { AppData, TimerState } from '../shared/types'
-import { debouncedWriter, readJson, writeJsonAtomic } from './persistence'
+import { debouncedWriter, readJson, writeJsonAtomic } from '../node/persistence'
+import { startBridgeServer } from '../node/bridge'
+import { connectClaude, connectorStatus, disconnectClaude } from './claudeConnector'
 
 const APP_ID = 'com.andylu.studytracker'
 
@@ -14,9 +16,9 @@ let mainWindow: BrowserWindow | null = null
 let miniWindow: BrowserWindow | null = null
 let host: StudyHost
 
-if (!app.requestSingleInstanceLock()) {
-  app.quit()
-}
+// A second copy just hands focus to the first one and quits.
+const isFirstInstance = app.requestSingleInstanceLock()
+if (!isFirstInstance) app.quit()
 
 function loadRenderer(win: BrowserWindow, hash = ''): void {
   if (process.env.ELECTRON_RENDERER_URL) {
@@ -161,6 +163,18 @@ function setupHost(): void {
     }
   })
 
+  ipcMain.handle(IPC.connectorStatus, () => connectorStatus())
+  ipcMain.handle(IPC.connectorConnect, () => connectClaude())
+  ipcMain.handle(IPC.connectorDisconnect, () => disconnectClaude())
+
+  // Lets the Claude connector make changes through the running app.
+  startBridgeServer(dir, {
+    getData: () => host.data,
+    replaceData: (data) => host.apply({ type: 'replaceAll', data })
+  })
+    .then((stop) => app.on('will-quit', stop))
+    .catch((err) => console.error('Claude connector bridge failed to start:', err))
+
   ipcMain.on(IPC.openMini, () => openMini())
   ipcMain.on(IPC.closeMini, () => miniWindow?.close())
   ipcMain.on(IPC.showMain, () => showMain())
@@ -179,6 +193,7 @@ function showMain(): void {
 app.on('second-instance', () => showMain())
 
 app.whenReady().then(() => {
+  if (!isFirstInstance) return
   // Required on Windows for notifications to show the app name.
   app.setAppUserModelId(APP_ID)
   setupHost()

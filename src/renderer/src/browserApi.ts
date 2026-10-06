@@ -86,6 +86,10 @@ export function createBrowserApi(): StudyApi {
       }
     },
     dataPath: async () => 'Browser storage (localStorage)',
+    // The connector needs the desktop app.
+    connectorStatus: async () => ({ state: 'unavailable' }),
+    connectorConnect: async () => ({ state: 'unavailable' }),
+    connectorDisconnect: async () => ({ state: 'unavailable' }),
     openMini: () => window.open('#/mini', 'mini', 'width=300,height=132'),
     closeMini: () => window.close(),
     showMain: () => window.opener?.focus()

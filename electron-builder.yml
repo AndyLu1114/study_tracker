@@ -6,6 +6,9 @@ directories:
 files:
   - out/**
   - package.json
+# The Claude connector runs outside the app archive, under the app's own executable.
+asarUnpack:
+  - out/mcp/**
 win:
   icon: build/icon.png
   target:

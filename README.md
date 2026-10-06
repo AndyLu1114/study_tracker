@@ -99,6 +99,21 @@ Press the **?** button at the top right of any page for a short tour of pop-up c
 
 <img src="docs/screenshots/en-help.png" alt="Help cards" width="860">
 
+#### 🤖 Use with Claude (optional)
+
+Study Tracker has no AI built in. If you use the **Claude desktop app**, you can let Claude work with your study data from there:
+
+1. In Study Tracker, open **Settings → Claude connector → Connect to Claude desktop**.
+2. Restart the Claude desktop app.
+3. Ask Claude things like:
+   - *"I want to learn transformer architecture in 4 weeks, about an hour on weekday evenings. Set it up in Study Tracker."*
+   - *"How am I doing this week? If I'm behind, move Thursday's session to Saturday morning."*
+   - *"Tick off the Encoder checkpoint."*
+
+Claude asks your permission before it uses Study Tracker. It can read your goals, plans and study time, and create or edit goals, checkpoints and plans; changes show up in Study Tracker right away. It **cannot** change your recorded study time, and it can delete a goal only when it is an exact duplicate. Before its first change each day, a backup is saved in the `backups` folder next to your data.
+
+Works with the installer version (not the portable one), with the Claude desktop app on the same computer.
+
 #### ✨ And also
 
 - English and 繁體中文 interface
@@ -203,6 +218,21 @@ Everything is saved in `%APPDATA%\Study Tracker\study-data.json` on your own com
 
 <img src="docs/screenshots/zh-help.png" alt="說明卡片" width="860">
 
+#### 🤖 搭配 Claude 使用（選用）
+
+讀書紀錄本身不含 AI。如果你有使用 **Claude 桌面版**，可以讓 Claude 在那裡協助處理你的讀書資料：
+
+1. 在讀書紀錄中開啟「**設定 → Claude 連接器 → 連接 Claude 桌面版**」。
+2. 重新啟動 Claude 桌面版。
+3. 試著問 Claude：
+   - 「我想在 4 週內學會 Transformer 架構，平日晚上大約一小時。幫我在讀書紀錄裡設定好。」
+   - 「我這週進度如何？如果落後了，把週四的讀書時段移到週六早上。」
+   - 「把 Encoder 檢查點打勾。」
+
+Claude 使用讀書紀錄前會先徵求你的同意。它可以讀取目標、計畫與讀書時間，也可以建立或修改目標、檢查點與計畫，變更會立即顯示在讀書紀錄中。它**無法**修改已記錄的讀書時間，也只能刪除完全重複的目標。每天第一次修改前，會在資料旁的 `backups` 資料夾自動備份。
+
+適用於安裝版（不支援免安裝版），且 Claude 桌面版需裝在同一台電腦上。
+
 #### ✨ 其他
 
 - 英文／繁體中文介面
@@ -245,9 +275,12 @@ Every push runs the tests and builds the Windows app on GitHub Actions ([`build.
 ```
 src/
   shared/    plain TypeScript, no Electron: data model, store operations, timer engine,
-             statistics, goal progress, calendar layout, translations, and the StudyHost
-             that ties them together
-  main/      Electron main process: windows, IPC, file storage, notifications
+             statistics, goal progress, calendar layout, translations, the connector's
+             actions, and the StudyHost that ties them together
+  main/      Electron main process: windows, IPC, notifications, Claude desktop config
+  node/      Node code shared by the app and the connector: file storage, backups,
+             and the local channel the connector uses while the app is open
+  mcp/       the Claude connector (an MCP server), bundled to out/mcp/index.cjs
   preload/   exposes the IPC API to the UI as window.studyApi
   renderer/  React UI (pages/, components/, styles.css)
 ```

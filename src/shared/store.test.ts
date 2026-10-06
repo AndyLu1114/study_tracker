@@ -7,11 +7,11 @@ describe('store', () => {
     d = applyOp(d, { type: 'upsertTag', tag: { id: 't', name: 'Math', color: 0 } })
     d = applyOp(d, {
       type: 'upsertPlan',
-      plan: { id: 'p', title: 'Ch 1', date: '2026-10-06', startTime: '09:00', durationMin: 60, tagId: 't', description: '', createdAt: 0 }
+      plan: { id: 'p', title: 'Ch 1', date: '2026-10-06', startTime: '09:00', durationMin: 60, tagId: 't', goalId: null, checkpointId: null, description: '', createdAt: 0 }
     })
     d = applyOp(d, {
       type: 'upsertLog',
-      log: { id: 'l', segments: [{ start: 0, end: 1 }], source: 'manual', tagId: 't', planId: 'p', note: '', createdAt: 0 }
+      log: { id: 'l', segments: [{ start: 0, end: 1 }], source: 'manual', tagId: 't', planId: 'p', goalId: null, checkpointId: null, note: '', createdAt: 0 }
     })
     const noTag = applyOp(d, { type: 'deleteTag', id: 't' })
     expect(noTag.plans[0].tagId).toBeNull()
@@ -43,5 +43,21 @@ describe('store', () => {
     expect(fixed.logs.map((l) => [l.id, l.tagId])).toEqual([['m', null]])
     expect(fixed.settings.language).toBe('zh-TW')
     expect(fixed.settings.pomodoro.focusMin).toBe(25)
+  })
+})
+
+describe('older data files', () => {
+  it('loads a file saved before goals existed', () => {
+    const d = normalizeData({
+      app: 'study-tracker',
+      tags: [],
+      plans: [{ id: 'p', title: 'x', date: '2026-10-06', startTime: '09:00', durationMin: 30 }],
+      logs: [{ id: 'l', segments: [{ start: 1, end: 5 }], planId: 'p' }],
+      settings: {}
+    })
+    expect(d.goals).toEqual([])
+    expect(d.plans[0]).toMatchObject({ goalId: null, checkpointId: null })
+    expect(d.logs[0]).toMatchObject({ goalId: null, checkpointId: null })
+    expect(d.settings.seenHelp).toBe(false)
   })
 })

@@ -1,10 +1,12 @@
 import { useMemo, useState, type ReactNode } from 'react'
-import { Clock3, Play, Plus } from 'lucide-react'
+import { Clock3, Play, Plus, Target } from 'lucide-react'
 import { useApp } from '../state'
 import { PlanForm } from '../components/PlanForm'
+import { PageHead } from '../components/Help'
+import { usePlanMenu } from '../components/usePlanMenu'
+import { usePlanTimer } from '../components/usePlanTimer'
 import { Segmented, TagPill, tagColor } from '../components/ui'
 import { hmToMinutes, minutesToHm, todayYmd } from '../../../shared/dates'
-import { msByPlan } from '../../../shared/stats'
 import type { Plan } from '../../../shared/types'
 import { dayLabel } from '../format'
 
@@ -17,7 +19,8 @@ export function PlannerPage(): ReactNode {
   const [editing, setEditing] = useState<Plan | 'new' | null>(null)
   const today = todayYmd()
 
-  const studied = useMemo(() => msByPlan(data.logs), [data.logs])
+  const { openMenu, menu } = usePlanMenu(setEditing)
+  const planTimer = usePlanTimer()
   const groups = useMemo(() => {
     const list = data.plans
       .filter((p) => (filter === 'upcoming' ? p.date >= today : filter === 'past' ? p.date < today : true))
@@ -33,13 +36,12 @@ export function PlannerPage(): ReactNode {
 
   return (
     <div className="page">
-      <header className="page-head">
-        <h1>{t('planner.title')}</h1>
+      <PageHead title={t('planner.title')}>
         <button className="btn primary" onClick={() => setEditing('new')}>
           <Plus size={16} />
           {t('planner.new')}
         </button>
-      </header>
+      </PageHead>
 
       <div className="toolbar">
         <Segmented
@@ -76,7 +78,7 @@ export function PlannerPage(): ReactNode {
             <h3 className={`group-title${date === today ? ' is-today' : ''}`}>{dayLabel(date, loc, t)}</h3>
             <div className="plan-list">
               {plans.map((p) => (
-                <PlanCard key={p.id} plan={p} studiedMs={studied.get(p.id) ?? 0} onOpen={() => setEditing(p)} />
+                <PlanCard key={p.id} plan={p} planTimer={planTimer} onOpen={() => setEditing(p)} onMenu={(e) => openMenu(e, p)} />
               ))}
             </div>
           </section>
@@ -84,29 +86,27 @@ export function PlannerPage(): ReactNode {
       )}
 
       {editing && <PlanForm plan={editing === 'new' ? undefined : editing} onClose={() => setEditing(null)} />}
+      {menu}
     </div>
   )
 }
 
-function PlanCard({ plan, studiedMs, onOpen }: { plan: Plan; studiedMs: number; onOpen: () => void }): ReactNode {
-  const { t, fmt, tagById, api, timer, setPage } = useApp()
+function PlanCard({ plan, planTimer, onOpen, onMenu }: {
+  plan: Plan
+  planTimer: ReturnType<typeof usePlanTimer>
+  onOpen: () => void
+  onMenu: (e: React.MouseEvent) => void
+}): ReactNode {
+  const { t, fmt, tagById, data } = useApp()
+  const studiedMs = planTimer.studiedMs(plan)
   const start = hmToMinutes(plan.startTime)
   const plannedMs = plan.durationMin * 60_000
   const pct = Math.min(100, Math.round((studiedMs / plannedMs) * 100))
-
-  const startClock = async (e: React.MouseEvent): Promise<void> => {
-    e.stopPropagation()
-    const link = { tagId: plan.tagId, planId: plan.id }
-    if (timer.status === 'idle' && timer.mode === 'countdown') {
-      await api.timer({ type: 'configure', cfg: { link, countdownMs: plannedMs } })
-    } else {
-      await api.timer({ type: 'configure', cfg: { link } })
-    }
-    setPage('clock')
-  }
+  const goal = plan.goalId ? data.goals.find((g) => g.id === plan.goalId) : undefined
+  const checkpoint = goal?.checkpoints.find((c) => c.id === plan.checkpointId)
 
   return (
-    <article className="plan-card" onClick={onOpen} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onOpen()}>
+    <article className="plan-card" onClick={onOpen} onContextMenu={onMenu} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && onOpen()}>
       <span className="plan-bar" style={{ background: tagColor(tagById(plan.tagId)?.color) }} />
       <div className="plan-time">
         <strong>{plan.startTime}</strong>
@@ -117,6 +117,13 @@ function PlanCard({ plan, studiedMs, onOpen }: { plan: Plan; studiedMs: number; 
         {plan.description && <div className="plan-desc">{plan.description}</div>}
         <div className="plan-meta">
           <TagPill tagId={plan.tagId} />
+          {goal && (
+            <span className="goal-chip" title={checkpoint ? `${goal.title} › ${checkpoint.title}` : goal.title}>
+              <Target size={12} />
+              {goal.title}
+              {checkpoint && <span className="goal-chip-cp">› {checkpoint.title}</span>}
+            </span>
+          )}
           <span className="muted">
             <Clock3 size={13} /> {fmt(plannedMs)}
           </span>
@@ -130,7 +137,11 @@ function PlanCard({ plan, studiedMs, onOpen }: { plan: Plan; studiedMs: number; 
       </div>
       <button
         className="icon-btn play"
-        onClick={startClock}
+        onClick={(e) => {
+          e.stopPropagation()
+          planTimer.start(plan)
+        }}
+        aria-disabled={!planTimer.canStart(plan)}
         title={t('planner.startClock')}
         aria-label={t('planner.startClock')}
       >

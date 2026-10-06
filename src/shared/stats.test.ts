@@ -9,6 +9,8 @@ const log = (id: string, tagId: string | null, start: number, mins: number): Stu
   id,
   tagId,
   planId: null,
+  goalId: null,
+  checkpointId: null,
   note: '',
   source: 'manual',
   createdAt: 0,

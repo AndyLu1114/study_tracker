@@ -119,6 +119,8 @@ export class StudyHost {
           source: r.finished.mode,
           tagId: r.finished.link.tagId,
           planId: r.finished.link.planId,
+          goalId: null,
+          checkpointId: null,
           note: '',
           createdAt: this.now()
         }

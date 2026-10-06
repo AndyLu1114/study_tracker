@@ -1,0 +1,22 @@
+appId: com.andylu.studytracker
+productName: Study Tracker
+directories:
+  buildResources: build
+  output: dist
+files:
+  - out/**
+  - package.json
+win:
+  icon: build/icon.png
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  artifactName: StudyTracker-Setup-${version}.${ext}
+  shortcutName: Study Tracker
+portable:
+  artifactName: StudyTracker-Portable-${version}.${ext}

@@ -20,11 +20,11 @@ export function CalendarPage(): ReactNode {
 
   const columns = useMemo(() => days.map((d) => ({ date: d, blocks: layoutDay(data.plans, d) })), [data.plans, today])
 
-  // Open scrolled to an hour before now (or the first plan, if that's earlier today).
+  // Open scrolled to an hour before now, or before today's first plan if that's earlier.
   useEffect(() => {
     const nowH = new Date().getHours()
     const first = columns[0].blocks[0]
-    const target = Math.max(0, Math.min(nowH - 1, first ? Math.floor(first.startMin / 60) : 24))
+    const target = Math.max(0, Math.min(nowH, first ? Math.floor(first.startMin / 60) : 24) - 1)
     scrollRef.current?.scrollTo({ top: target * HOUR_PX })
   }, [])
 

@@ -1,42 +1,171 @@
-# Study Tracker
+<p align="center">
+  <img src="build/icon.png" width="96" alt="Study Tracker icon">
+</p>
 
-A small Windows desktop app for planning study sessions, timing them, and seeing your progress, with a focus on the next few days rather than months of history.
+<h1 align="center">Study Tracker · 讀書紀錄</h1>
 
-English and 繁體中文 (Taiwan) UI, light/dark theme, all data stored locally.
+<p align="center">
+  A calm little Windows app to plan study sessions, time them, and see your progress,<br>
+  focused on the next few days rather than months of history.<br><br>
+  一個簡潔的 Windows 讀書小幫手：規劃讀書計畫、計時、追蹤進度，<br>
+  只專注在眼前這幾天。
+</p>
 
-| Statistics | Study Clock |
-|---|---|
-| ![Statistics](docs/screenshots/statistics.png) | ![Study Clock](docs/screenshots/clock.png) |
-| **Calendar** | **繁體中文 · dark** |
-| ![Calendar](docs/screenshots/calendar.png) | ![Statistics in Chinese, dark theme](docs/screenshots/statistics-zh-dark.png) |
+<p align="center">
+  <a href="#en"><b>English</b></a> &nbsp;·&nbsp; <a href="#zh"><b>繁體中文</b></a>
+</p>
 
-## Features
+<p align="center">
+  <img src="docs/screenshots/en-statistics.png" alt="Study Tracker statistics screen" width="860">
+</p>
 
-- **Study Plans:** create sessions with a title, date, start time, duration, one tag and a description. Each plan shows how much you have actually studied against it.
-- **Study Clock:** stopwatch, countdown, or pomodoro (custom focus / short break / long break / rounds). Link a session to a tag or plan before you start, or afterwards from *Today's sessions*. Sessions shorter than one minute are not saved. You can also log time by hand.
-- **Mini clock:** a small always-on-top window that stays in sync with the main clock.
-- **Calendar:** today and the next two days on an hourly grid. Click an empty slot to add a plan; plans that run past midnight continue into the next day.
-- **Statistics:**
-  - *Check-in:* a 14-day GitHub-style grid (none / under 30 min / 30–60 min / 1–3 h / 3 h and more).
-  - *Study time:* bar chart by day, week or month, split by tag, with a tag filter.
-  - *By tag:* a table of each tag's time per period.
-- **Notifications:** silent Windows notifications when a countdown ends or a pomodoro phase changes (can be turned off).
-- **Backup:** export and import everything as one JSON file, in the same format the app stores on disk.
+---
 
-## Install (Windows)
+<a id="en"></a>
 
-Every push builds the Windows app on GitHub Actions. Open the repository's **Actions** tab, pick the latest **Build** run, and download the **StudyTracker-windows** artifact. It contains:
+## English
 
-- `StudyTracker-Setup-x.y.z.exe`: installer
-- `StudyTracker-Portable-x.y.z.exe`: a single exe that runs without installing
+### Why Study Tracker?
 
-The app is not code-signed, so Windows SmartScreen may warn you the first time. Choose *More info → Run anyway*.
+Most study apps pile everything you have ever done into ever-growing charts. Study Tracker keeps a deliberately **short horizon**: a 14-day check-in grid, a 3-day calendar, and a clock that is always one click away, so your attention stays on today.
 
-Your data lives in `%APPDATA%\Study Tracker\study-data.json`.
+### Features
 
-## Development
+#### 📋 Study Plans
 
-Requires Node.js 22+.
+Write down what you are going to study: a **title, date, start time, duration, tag** (e.g. *LeetCode*, *English*) and **notes**. Each plan shows how much you have actually studied against it, and the ▶ button starts the clock already linked to that plan.
+
+<img src="docs/screenshots/en-planner.png" alt="Study plans" width="860">
+
+#### ⏱️ Study Clock
+
+Three modes:
+
+- **Stopwatch**: counts up while you study
+- **Countdown**: set a duration and go
+- **Pomodoro**: choose your own focus, short break and long break lengths, and how often the long break comes
+
+Only focused time is recorded; pauses and breaks don't count. Link a session to a tag or plan before you start, or afterwards from *Today's sessions*. Forgot to start the timer? Log the time by hand.
+
+<img src="docs/screenshots/en-clock.png" alt="Study clock in pomodoro mode" width="860">
+
+**Mini clock**: a small always-on-top window, so the timer stays visible while you work in other apps.
+
+<img src="docs/screenshots/en-mini-clock.png" alt="Mini clock" width="300">
+
+#### 📅 3-Day Calendar
+
+Today, tomorrow and the day after on an hourly grid, like Google Calendar. Click an empty slot to add a plan at that time; click a plan to edit it. A red line marks the current time, and plans that run past midnight continue into the next day.
+
+<img src="docs/screenshots/en-calendar.png" alt="3-day calendar" width="860">
+
+#### 📊 Statistics
+
+- **Check-in**: a GitHub-style grid of the last 14 days. The darker the green, the longer you studied (none · under 30 min · 30–60 min · 1–3 h · 3 h+). Your current streak is shown next to it.
+- **Study time**: a bar chart by **day, week or month**, each bar split by tag colour. Hover a bar for the details, or filter to a single tag.
+- **By tag**: a table with each tag's time in every period.
+
+<img src="docs/screenshots/en-dark-statistics.png" alt="Statistics in dark mode" width="860">
+
+#### ✨ And also
+
+- English and 繁體中文 interface
+- Light, dark, or follow your Windows setting
+- Silent Windows notifications when a countdown ends or a pomodoro phase changes
+- Export / import everything as one JSON backup file
+- **Private by design**: no account, no cloud. Everything stays on your PC.
+
+### Download & install
+
+> Requires Windows 10 or 11 (64-bit).
+
+1. Open the [**Actions → Build**](https://github.com/AndyLu1114/study_tracker/actions/workflows/build.yml) page, click the newest run with a green ✓, and download **StudyTracker-windows** under *Artifacts* (you need to be signed in to GitHub).
+2. Unzip it. You will find two files; use either one:
+   - `StudyTracker-Setup-x.y.z.exe`: installs the app with a Start menu shortcut
+   - `StudyTracker-Portable-x.y.z.exe`: runs straight away, no installation
+3. If Windows shows *"Windows protected your PC"*, click **More info → Run anyway**. This appears because the app is not code-signed.
+
+### Your data
+
+Everything is saved in `%APPDATA%\Study Tracker\study-data.json` on your own computer. Uninstalling the app does not delete it. To move to a new PC or keep a backup, use **Settings → Backup → Export**, then **Import** on the other machine.
+
+---
+
+<a id="zh"></a>
+
+## 繁體中文
+
+### 為什麼做這個 App？
+
+很多讀書 App 會把你所有的紀錄堆成越來越大的圖表。「讀書紀錄」刻意**只看近期**：14 天的打卡表、3 天的行事曆，再加上一鍵就能開始的計時器，讓你把注意力放在今天。
+
+### 功能
+
+#### 📋 讀書計畫
+
+寫下要讀什麼：**標題、日期、開始時間、時長、標籤**（例如 LeetCode、英文）與**說明**。每個計畫都會顯示你實際讀了多久；按下 ▶ 就能直接開始計時，並自動連結到這個計畫。
+
+<img src="docs/screenshots/zh-planner.png" alt="讀書計畫" width="860">
+
+#### ⏱️ 讀書計時
+
+三種模式：
+
+- **碼錶**：從零開始往上計時
+- **倒數計時**：設定時長後開始倒數
+- **番茄鐘**：自訂專注、短休息、長休息的長度，以及每幾輪休息一次長休息
+
+只會記錄專注的時間，暫停與休息都不算。可以在開始前，或結束後在「今日紀錄」裡，把紀錄連結到標籤或計畫。忘了開計時器？也可以手動補登。
+
+<img src="docs/screenshots/zh-clock.png" alt="番茄鐘計時中" width="860">
+
+**迷你時鐘**：永遠置頂的小視窗，使用其他程式時也看得到計時。
+
+<img src="docs/screenshots/zh-mini-clock.png" alt="迷你時鐘" width="300">
+
+#### 📅 三天行事曆
+
+像 Google 日曆一樣，以每小時為一格，顯示今天、明天、後天的計畫。點空白時段即可在該時間新增計畫，點計畫可以編輯。紅線標示現在時間；跨過午夜的計畫會延續到隔天。
+
+<img src="docs/screenshots/zh-calendar.png" alt="三天行事曆" width="860">
+
+#### 📊 學習統計
+
+- **打卡紀錄**：類似 GitHub 的方格，顯示最近 14 天。讀得越久，綠色越深（無・30 分鐘以下・30–60 分鐘・1–3 小時・3 小時以上），旁邊也會顯示連續讀書天數。
+- **累積學習時間**：依**日、週、月**顯示長條圖，每根長條依標籤分色。滑鼠移到長條上可看細節，也可以只看單一標籤。
+- **依標籤**：表格列出每個標籤在各期間的讀書時間。
+
+<img src="docs/screenshots/zh-statistics.png" alt="學習統計" width="860">
+
+<img src="docs/screenshots/zh-dark-statistics.png" alt="學習統計（深色模式）" width="860">
+
+#### ✨ 其他
+
+- 英文／繁體中文介面
+- 淺色、深色，或跟隨 Windows 設定
+- 倒數結束或番茄鐘切換階段時，顯示無聲的 Windows 通知
+- 所有資料可匯出／匯入成一個 JSON 備份檔
+- **重視隱私**：不需註冊帳號、不上雲端，所有資料都存在你自己的電腦裡
+
+### 下載與安裝
+
+> 系統需求：Windows 10 或 11（64 位元）
+
+1. 打開 [**Actions → Build**](https://github.com/AndyLu1114/study_tracker/actions/workflows/build.yml) 頁面，點選最新一次有綠色 ✓ 的執行紀錄，在下方 *Artifacts* 下載 **StudyTracker-windows**（需要登入 GitHub）。
+2. 解壓縮後會看到兩個檔案，擇一使用即可：
+   - `StudyTracker-Setup-x.y.z.exe`：安裝版，會建立開始功能表捷徑
+   - `StudyTracker-Portable-x.y.z.exe`：免安裝版，點兩下直接使用
+3. 如果出現「**Windows 已保護您的電腦**」，請點「**其他資訊 → 仍要執行**」。這是因為程式沒有數位簽章。
+
+### 資料存放
+
+所有資料都存在你電腦裡的 `%APPDATA%\Study Tracker\study-data.json`，解除安裝也不會刪除。要換電腦或備份時，請到「**設定 → 備份 → 匯出**」，再到新電腦上「**匯入**」。
+
+---
+
+## Development · 開發
+
+Built with Electron, React and TypeScript. Requires Node.js 22+.
 
 ```bash
 npm install
@@ -47,7 +176,7 @@ npm run typecheck
 npm run dist:win   # build the Windows installer (run on Windows)
 ```
 
-### Layout
+Every push runs the tests and builds the Windows app on GitHub Actions ([`build.yml`](.github/workflows/build.yml)).
 
 ```
 src/
@@ -58,4 +187,8 @@ src/
   renderer/  React UI (pages/, components/, styles.css)
 ```
 
-The timer runs in the main process, so it keeps accurate time while the window is hidden, and the mini clock and main window always show the same session. A running session also survives restarting the app.
+The timer runs in the main process, so it keeps accurate time while the window is hidden, the mini clock and main window always show the same session, and a running session survives restarting the app.
+
+## License
+
+[MIT](LICENSE)

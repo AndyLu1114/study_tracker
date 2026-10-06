@@ -1,10 +1,11 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { Download, Plus, Trash2, Upload } from 'lucide-react'
+import { Download, Link2, Plus, Trash2, Unlink, Upload } from 'lucide-react'
 import { useApp } from '../state'
 import { Segmented, tagColor, useConfirm } from '../components/ui'
 import { PageHead } from '../components/Help'
 import { newId, nextTagColor, PALETTE_SIZE } from '../../../shared/store'
 import type { Language, Tag, Theme } from '../../../shared/types'
+import type { ConnectorStatus } from '../../../shared/api'
 
 export function SettingsPage(): ReactNode {
   const { data, api, t } = useApp()
@@ -113,6 +114,8 @@ export function SettingsPage(): ReactNode {
         </form>
       </section>
 
+      <ClaudeConnector />
+
       <section className="card settings">
         <div className="setting-block-head">
           <h3>{t('settings.backup')}</h3>
@@ -168,5 +171,69 @@ function TagRow({ tag, onDelete }: { tag: Tag; onDelete: () => void }): ReactNod
         <Trash2 size={16} />
       </button>
     </li>
+  )
+}
+
+/** Adds or removes Study Tracker in the Claude desktop app's settings. */
+function ClaudeConnector(): ReactNode {
+  const { api, t } = useApp()
+  const [status, setStatus] = useState<ConnectorStatus | null>(null)
+  const [note, setNote] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    api.connectorStatus().then(setStatus)
+  }, [api])
+
+  const run = async (action: () => Promise<ConnectorStatus>, done: string): Promise<void> => {
+    setBusy(true)
+    const next = await action()
+    setBusy(false)
+    setStatus(next)
+    setNote(next.error ? t('connector.error', { msg: next.error }) : done)
+  }
+
+  if (!status) return null
+  const state = status.state
+  const canConnect = state === 'notConnected' || state === 'needsUpdate' || state === 'connected'
+  const label = {
+    connected: t('connector.connected'),
+    notConnected: t('connector.notConnected'),
+    needsUpdate: t('connector.needsUpdate'),
+    claudeMissing: t('connector.claudeMissing'),
+    portable: t('connector.portable'),
+    unavailable: t('connector.unavailable')
+  }[state]
+
+  return (
+    <section className="card settings">
+      <div className="setting-block-head">
+        <h3>{t('connector.title')}</h3>
+        <p className="muted small">{t('connector.desc')}</p>
+        <p className="muted small">{t('connector.limits')}</p>
+      </div>
+      <div className="connector-row">
+        <span className={`connector-state ${state}`}>
+          <span className="connector-dot" />
+          {label}
+        </span>
+        {canConnect && (
+          <div className="button-row">
+            {state === 'connected' ? (
+              <button className="btn" disabled={busy} onClick={() => run(api.connectorDisconnect, t('connector.disconnected'))}>
+                <Unlink size={15} />
+                {t('connector.disconnect')}
+              </button>
+            ) : (
+              <button className="btn primary" disabled={busy} onClick={() => run(api.connectorConnect, t('connector.restart'))}>
+                <Link2 size={15} />
+                {state === 'needsUpdate' ? t('connector.reconnect') : t('connector.connect')}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+      {note && <p className="muted small connector-note">{note}</p>}
+    </section>
   )
 }

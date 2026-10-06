@@ -2,6 +2,14 @@ import type { TimerCommand } from './host'
 import type { StoreOp } from './store'
 import type { AppData, TimerState } from './types'
 
+export type ConnectorState = 'connected' | 'notConnected' | 'needsUpdate' | 'claudeMissing' | 'portable' | 'unavailable'
+
+/** Whether the Claude desktop app is set up to use Study Tracker's connector. */
+export interface ConnectorStatus {
+  state: ConnectorState
+  error?: string
+}
+
 export type ImportResult = { ok: true } | { ok: false; cancelled: boolean; error?: string }
 
 /** What the UI can ask of the backend (Electron preload, or the browser fallback). */
@@ -16,6 +24,9 @@ export interface StudyApi {
   exportData(): Promise<boolean>
   importData(): Promise<ImportResult>
   dataPath(): Promise<string>
+  connectorStatus(): Promise<ConnectorStatus>
+  connectorConnect(): Promise<ConnectorStatus>
+  connectorDisconnect(): Promise<ConnectorStatus>
   openMini(): void
   closeMini(): void
   showMain(): void
@@ -31,6 +42,9 @@ export const IPC = {
   exportData: 'data:export',
   importData: 'data:import',
   dataPath: 'data:path',
+  connectorStatus: 'connector:status',
+  connectorConnect: 'connector:connect',
+  connectorDisconnect: 'connector:disconnect',
   openMini: 'win:openMini',
   closeMini: 'win:closeMini',
   showMain: 'win:showMain'

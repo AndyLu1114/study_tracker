@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { Download, Plus, Trash2, Upload } from 'lucide-react'
 import { useApp } from '../state'
 import { Segmented, tagColor, useConfirm } from '../components/ui'
+import { PageHead } from '../components/Help'
 import { newId, nextTagColor, PALETTE_SIZE } from '../../../shared/store'
 import type { Language, Tag, Theme } from '../../../shared/types'
 
@@ -41,9 +42,7 @@ export function SettingsPage(): ReactNode {
 
   return (
     <div className="page narrow">
-      <header className="page-head">
-        <h1>{t('settings.title')}</h1>
-      </header>
+      <PageHead title={t('settings.title')} />
 
       <section className="card settings">
         <div className="setting-row">

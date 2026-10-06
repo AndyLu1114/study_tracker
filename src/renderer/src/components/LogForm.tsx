@@ -33,6 +33,8 @@ export function LogForm({ log, onClose }: { log?: StudyLog; onClose: () => void 
         source: log?.source ?? 'manual',
         tagId,
         planId,
+        goalId: log?.goalId ?? null,
+        checkpointId: log?.checkpointId ?? null,
         note: note.trim(),
         createdAt: log?.createdAt ?? Date.now()
       }

@@ -3,7 +3,7 @@ import { layoutDay } from './calendar'
 import type { Plan } from './types'
 
 const plan = (id: string, date: string, startTime: string, durationMin: number): Plan => ({
-  id, title: id, date, startTime, durationMin, tagId: null, description: '', createdAt: 0
+  id, title: id, date, startTime, durationMin, tagId: null, goalId: null, checkpointId: null, description: '', createdAt: 0
 })
 
 describe('layoutDay', () => {

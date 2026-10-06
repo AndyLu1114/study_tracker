@@ -8,6 +8,31 @@ export interface Tag {
   color: number
 }
 
+export interface Checkpoint {
+  id: string
+  title: string
+  tagId: string | null
+  done: boolean
+  doneAt: number | null
+}
+
+/** A longer-term goal, broken into ordered checkpoints. */
+export interface Goal {
+  id: string
+  title: string
+  description: string
+  tagId: string | null
+  /** Local date, YYYY-MM-DD. */
+  startDate: string
+  endDate: string | null
+  /** When set, the goal completes itself once this many hours are studied. */
+  targetHours: number | null
+  /** Set when the user marks the goal as completed. */
+  completedAt: number | null
+  checkpoints: Checkpoint[]
+  createdAt: number
+}
+
 /** A planned study session, created in the Study Tracker. */
 export interface Plan {
   id: string
@@ -18,6 +43,8 @@ export interface Plan {
   startTime: string
   durationMin: number
   tagId: string | null
+  goalId: string | null
+  checkpointId: string | null
   description: string
   createdAt: number
 }
@@ -37,6 +64,12 @@ export interface StudyLog {
   source: LogSource
   tagId: string | null
   planId: string | null
+  /**
+   * Goal link kept on the session itself only once its plan is deleted;
+   * while the plan exists, the plan's goal link is the one that counts.
+   */
+  goalId: string | null
+  checkpointId: string | null
   note: string
   createdAt: number
 }
@@ -55,12 +88,15 @@ export interface Settings {
   notifications: boolean
   countdownMin: number
   pomodoro: PomodoroSettings
+  /** The help cards open by themselves until the user has seen them once. */
+  seenHelp: boolean
 }
 
 export interface AppData {
   app: 'study-tracker'
   version: 1
   tags: Tag[]
+  goals: Goal[]
   plans: Plan[]
   logs: StudyLog[]
   settings: Settings

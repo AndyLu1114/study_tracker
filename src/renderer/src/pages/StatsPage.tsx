@@ -2,6 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react'
 import { ChevronLeft, ChevronRight, Flame } from 'lucide-react'
 import { useApp } from '../state'
 import { CheckInGrid } from '../components/CheckInGrid'
+import { PageHead } from '../components/Help'
 import { StackedBars } from '../components/StackedBars'
 import { Segmented, tagColor } from '../components/ui'
 import { addDays, parseYmd, todayYmd } from '../../../shared/dates'
@@ -48,9 +49,7 @@ export function StatsPage(): ReactNode {
 
   return (
     <div className="page">
-      <header className="page-head">
-        <h1>{t('nav.stats')}</h1>
-      </header>
+      <PageHead title={t('nav.stats')} />
 
       <section className="card checkin-card">
         <div className="checkin-info">

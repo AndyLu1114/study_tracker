@@ -5,9 +5,9 @@
 <h1 align="center">Study Tracker · 讀書紀錄</h1>
 
 <p align="center">
-  A calm little Windows app to plan study sessions, time them, and see your progress,<br>
+  A calm little Windows app to set study goals, plan sessions, time them, and see your progress,<br>
   focused on the next few days rather than months of history.<br><br>
-  一個簡潔的 Windows 讀書小幫手：規劃讀書計畫、計時、追蹤進度，<br>
+  一個簡潔的 Windows 讀書小幫手：設定目標、規劃讀書計畫、計時、追蹤進度，<br>
   只專注在眼前這幾天。
 </p>
 
@@ -27,13 +27,31 @@
 
 ### Why Study Tracker?
 
-Most study apps pile everything you have ever done into ever-growing charts. Study Tracker keeps a deliberately **short horizon**: a 14-day check-in grid, a 3-day calendar, and a clock that is always one click away, so your attention stays on today.
+Most study apps pile everything you have ever done into ever-growing charts. Study Tracker keeps a deliberately **short horizon**: a 14-day check-in grid, a 3-day calendar, and a clock that is always one click away, so your attention stays on today. Your bigger goals live in their own tab, broken into small checkpoints you can tick off.
 
 ### Features
 
+#### 🎯 Goals
+
+Create a goal such as *Study LLMs* and break it into **checkpoints**: *Transformer architecture → Attention is all you need → llama.cpp → …*. Goals and checkpoints can each have a tag.
+
+- Goals are grouped into **Current**, **Upcoming** and **Completed**.
+- Finish a goal by marking it **completed**, or give it **target hours** and it completes itself once you have studied that long.
+- Open a goal to see its progress, hours studied, days left, time spent on each checkpoint, weekly study time, and upcoming plans.
+
+<img src="docs/screenshots/en-goals.png" alt="Goals" width="860">
+
+<img src="docs/screenshots/en-goal-detail.png" alt="Goal detail with progress statistics" width="860">
+
 #### 📋 Study Plans
 
-Write down what you are going to study: a **title, date, start time, duration, tag** (e.g. *LeetCode*, *English*) and **notes**. Each plan shows how much you have actually studied against it, and the ▶ button starts the clock already linked to that plan.
+Write down what you are going to study: a **title, date, start time, duration, tag** (e.g. *LeetCode*, *English*) and **notes**. A new plan starts at the current date and time.
+
+As you type the title, **matching goals appear**. Pick a goal, then one of its checkpoints, and the plan is linked to it: the title and tag fill in for you. Each plan shows how much you have actually studied against it.
+
+<img src="docs/screenshots/en-plan-autocomplete.png" alt="Linking a plan to a goal checkpoint while typing the title" width="860">
+
+Press **▶** on a plan, or **right-click → Start timer**, to start a countdown for the **time left** on that plan (planned minus already studied). If there is no time left, nothing happens.
 
 <img src="docs/screenshots/en-planner.png" alt="Study plans" width="860">
 
@@ -55,9 +73,17 @@ Only focused time is recorded; pauses and breaks don't count. Link a session to 
 
 #### 📅 3-Day Calendar
 
-Today, tomorrow and the day after on an hourly grid, like Google Calendar. Click an empty slot to add a plan at that time; click a plan to edit it. A red line marks the current time, and plans that run past midnight continue into the next day.
+Today, tomorrow and the day after on an hourly grid, like Google Calendar.
+
+- **Click an empty slot** to add a plan at that time.
+- **Click a plan** to edit it.
+- **Right-click a plan → Start timer** to jump to the Study Clock and count down its time left.
+
+A red line marks the current time, and plans that run past midnight continue into the next day.
 
 <img src="docs/screenshots/en-calendar.png" alt="3-day calendar" width="860">
+
+<img src="docs/screenshots/en-calendar-menu.png" alt="Right-click a plan to start its timer" width="860">
 
 #### 📊 Statistics
 
@@ -66,6 +92,12 @@ Today, tomorrow and the day after on an hourly grid, like Google Calendar. Click
 - **By tag**: a table with each tag's time in every period.
 
 <img src="docs/screenshots/en-dark-statistics.png" alt="Statistics in dark mode" width="860">
+
+#### ❓ Built-in help
+
+Press the **?** button at the top right of any page for a short tour of pop-up cards. It opens on the card for the page you are on, and shows once automatically the first time you launch the app.
+
+<img src="docs/screenshots/en-help.png" alt="Help cards" width="860">
 
 #### ✨ And also
 
@@ -97,13 +129,31 @@ Everything is saved in `%APPDATA%\Study Tracker\study-data.json` on your own com
 
 ### 為什麼做這個 App？
 
-很多讀書 App 會把你所有的紀錄堆成越來越大的圖表。「讀書紀錄」刻意**只看近期**：14 天的打卡表、3 天的行事曆，再加上一鍵就能開始的計時器，讓你把注意力放在今天。
+很多讀書 App 會把你所有的紀錄堆成越來越大的圖表。「讀書紀錄」刻意**只看近期**：14 天的打卡表、3 天的行事曆，再加上一鍵就能開始的計時器，讓你把注意力放在今天。較長期的目標則放在獨立的分頁，拆成一個個可以打勾的小檢查點。
 
 ### 功能
 
+#### 🎯 目標
+
+建立一個目標，例如「學習大型語言模型」，再拆成幾個**檢查點**：Transformer 架構 → Attention 論文 → llama.cpp → …。目標與檢查點都可以設定標籤。
+
+- 目標分成**進行中**、**即將開始**、**已完成**三類。
+- 可以自己把目標**標記為完成**；或設定**目標時數**，讀滿後會自動完成。
+- 點開目標可以看到進度、已讀時間、剩餘天數、各檢查點的讀書時間、每週讀書時間，以及接下來的計畫。
+
+<img src="docs/screenshots/zh-goals.png" alt="目標" width="860">
+
+<img src="docs/screenshots/zh-goal-detail.png" alt="目標詳細資料與進度統計" width="860">
+
 #### 📋 讀書計畫
 
-寫下要讀什麼：**標題、日期、開始時間、時長、標籤**（例如 LeetCode、英文）與**說明**。每個計畫都會顯示你實際讀了多久；按下 ▶ 就能直接開始計時，並自動連結到這個計畫。
+寫下要讀什麼：**標題、日期、開始時間、時長、標籤**（例如 LeetCode、英文）與**說明**。新計畫預設為現在的日期與時間。
+
+輸入標題時，**符合的目標會自動出現**。先選目標，再選其中一個檢查點，計畫就會連結上去，標題與標籤也會自動填好。每個計畫都會顯示你實際讀了多久。
+
+<img src="docs/screenshots/zh-plan-autocomplete.png" alt="輸入標題時連結到目標的檢查點" width="860">
+
+在計畫上按 **▶**，或**按右鍵 →「開始計時」**，就會倒數這個計畫的**剩餘時間**（計畫時長減去已讀時間）。沒有剩餘時間時則不會有任何動作。
 
 <img src="docs/screenshots/zh-planner.png" alt="讀書計畫" width="860">
 
@@ -125,9 +175,17 @@ Everything is saved in `%APPDATA%\Study Tracker\study-data.json` on your own com
 
 #### 📅 三天行事曆
 
-像 Google 日曆一樣，以每小時為一格，顯示今天、明天、後天的計畫。點空白時段即可在該時間新增計畫，點計畫可以編輯。紅線標示現在時間；跨過午夜的計畫會延續到隔天。
+像 Google 日曆一樣，以每小時為一格，顯示今天、明天、後天的計畫。
+
+- **點空白時段**：在該時間新增計畫。
+- **點計畫**：編輯計畫。
+- **在計畫上按右鍵 →「開始計時」**：切換到讀書計時，倒數剩餘時間。
+
+紅線標示現在時間；跨過午夜的計畫會延續到隔天。
 
 <img src="docs/screenshots/zh-calendar.png" alt="三天行事曆" width="860">
+
+<img src="docs/screenshots/zh-calendar-menu.png" alt="在計畫上按右鍵開始計時" width="860">
 
 #### 📊 學習統計
 
@@ -138,6 +196,12 @@ Everything is saved in `%APPDATA%\Study Tracker\study-data.json` on your own com
 <img src="docs/screenshots/zh-statistics.png" alt="學習統計" width="860">
 
 <img src="docs/screenshots/zh-dark-statistics.png" alt="學習統計（深色模式）" width="860">
+
+#### ❓ 內建說明
+
+在任何頁面右上角按 **?**，就會出現簡短的導覽卡片，並從目前頁面的說明開始。第一次開啟 App 時也會自動顯示一次。
+
+<img src="docs/screenshots/zh-help.png" alt="說明卡片" width="860">
 
 #### ✨ 其他
 
@@ -181,7 +245,8 @@ Every push runs the tests and builds the Windows app on GitHub Actions ([`build.
 ```
 src/
   shared/    plain TypeScript, no Electron: data model, store operations, timer engine,
-             statistics, calendar layout, translations, and the StudyHost that ties them together
+             statistics, goal progress, calendar layout, translations, and the StudyHost
+             that ties them together
   main/      Electron main process: windows, IPC, file storage, notifications
   preload/   exposes the IPC API to the UI as window.studyApi
   renderer/  React UI (pages/, components/, styles.css)

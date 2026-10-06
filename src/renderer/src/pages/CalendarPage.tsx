@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useApp, useNow } from '../state'
 import { PlanForm } from '../components/PlanForm'
+import { PageHead } from '../components/Help'
+import { usePlanMenu } from '../components/usePlanMenu'
 import { tagColor } from '../components/ui'
 import { addDays, hmToMinutes, minutesToHm, parseYmd, todayYmd } from '../../../shared/dates'
 import { layoutDay } from '../../../shared/calendar'
@@ -17,6 +19,7 @@ export function CalendarPage(): ReactNode {
   const days = [today, addDays(today, 1), addDays(today, 2)]
   const [editing, setEditing] = useState<{ plan?: Plan; date?: string; startTime?: string } | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const { openMenu, menu } = usePlanMenu((plan) => setEditing({ plan }))
 
   const columns = useMemo(() => days.map((d) => ({ date: d, blocks: layoutDay(data.plans, d) })), [data.plans, today])
 
@@ -38,12 +41,7 @@ export function CalendarPage(): ReactNode {
 
   return (
     <div className="page calendar-page">
-      <header className="page-head">
-        <div>
-          <h1>{t('calendar.title')}</h1>
-          <p className="muted small">{t('calendar.hint')}</p>
-        </div>
-      </header>
+      <PageHead title={t('calendar.title')} subtitle={t('calendar.hint')} />
 
       <div className="card calendar">
         <div className="cal-head">
@@ -94,6 +92,7 @@ export function CalendarPage(): ReactNode {
                         e.stopPropagation()
                         setEditing({ plan: b.plan })
                       }}
+                      onContextMenu={(e) => openMenu(e, b.plan)}
                       title={`${b.plan.title}\n${b.plan.startTime}–${minutesToHm(hmToMinutes(b.plan.startTime) + b.plan.durationMin)}`}
                     >
                       <span className="cal-block-title">
@@ -120,6 +119,7 @@ export function CalendarPage(): ReactNode {
           onClose={() => setEditing(null)}
         />
       )}
+      {menu}
     </div>
   )
 }

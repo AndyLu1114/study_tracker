@@ -10,6 +10,15 @@ const PAD = { top: 28, right: 8, bottom: 28, left: 52 }
 const BAR_MAX = 24
 const HOUR = 3_600_000
 
+let measureCtx: CanvasRenderingContext2D | null = null
+/** Rendered width of a bar-value label (matches `.bars .bar-value`). */
+function labelWidth(text: string): number {
+  measureCtx ??= document.createElement('canvas').getContext('2d')
+  if (!measureCtx) return text.length * 7
+  measureCtx.font = `500 11.5px ${getComputedStyle(document.body).fontFamily}`
+  return measureCtx.measureText(text).width
+}
+
 function niceStep(maxMs: number): number {
   const steps = [0.25, 0.5, 1, 2, 3, 4, 5, 10, 20, 25, 50, 100, 200].map((h) => h * HOUR)
   return steps.find((s) => maxMs / s <= 4) ?? steps[steps.length - 1]
@@ -42,6 +51,14 @@ export function StackedBars({ series, labels, tagOrder }: {
   const band = series.length ? plotW / series.length : 0
   const barW = Math.min(BAR_MAX, band * 0.5)
   const y = (ms: number): number => PAD.top + plotH - (ms / top) * plotH
+  // Full label if it fits over its bar, else the compact one, else none (the tooltip has it).
+  const valueLabel = (ms: number): string | null => {
+    const room = band - 4
+    const full = fmt(ms)
+    if (labelWidth(full) <= room) return full
+    const short = formatHours(lang, ms)
+    return labelWidth(short) <= room ? short : null
+  }
 
   return (
     <div className="bars" ref={ref}>
@@ -79,9 +96,9 @@ export function StackedBars({ series, labels, tagOrder }: {
                     <rect key={j} x={x} y={y1} width={barW} height={h} fill={color} pointerEvents="none" />
                   )
                 })}
-                {s.breakdown.totalMs > 0 && (
+                {s.breakdown.totalMs > 0 && valueLabel(s.breakdown.totalMs) && (
                   <text x={cx} y={y(s.breakdown.totalMs) - 8} textAnchor="middle" className="bar-value">
-                    {fmt(s.breakdown.totalMs)}
+                    {valueLabel(s.breakdown.totalMs)}
                   </text>
                 )}
                 <text x={cx} y={HEIGHT - 8} textAnchor="middle" className="tick x">

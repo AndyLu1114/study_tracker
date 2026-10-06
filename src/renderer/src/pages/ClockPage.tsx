@@ -2,6 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react'
 import { Pause, PictureInPicture2, Play, Plus, SkipForward, Square, Trash2 } from 'lucide-react'
 import { useApp } from '../state'
 import { ClockRing } from '../components/ClockRing'
+import { PageHead } from '../components/Help'
 import { LogForm } from '../components/LogForm'
 import { Field, PlanSelect, Segmented, TagDot, TagSelect, useConfirm } from '../components/ui'
 import { useClock } from '../components/useClock'
@@ -59,13 +60,12 @@ export function ClockPage(): ReactNode {
 
   return (
     <div className="page">
-      <header className="page-head">
-        <h1>{t('nav.clock')}</h1>
+      <PageHead title={t('nav.clock')}>
         <button className="btn" onClick={() => api.openMini()}>
           <PictureInPicture2 size={16} />
           {t('clock.mini')}
         </button>
-      </header>
+      </PageHead>
 
       <div className="clock-layout">
         <section className="card clock-card">

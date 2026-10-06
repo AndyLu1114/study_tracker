@@ -3,7 +3,7 @@ import type { StudyApi } from '../../shared/api'
 import { t as translate, formatDuration, locale, type MessageKey } from '../../shared/i18n'
 import type { AppData, Tag, TimerState } from '../../shared/types'
 
-export type Page = 'planner' | 'clock' | 'calendar' | 'stats' | 'settings'
+export type Page = 'goals' | 'planner' | 'clock' | 'calendar' | 'stats' | 'settings'
 
 interface AppContextValue {
   api: StudyApi
@@ -40,7 +40,7 @@ function useResolvedTheme(theme: AppData['settings']['theme']): 'light' | 'dark'
 export function AppProvider({ api, children }: { api: StudyApi; children: ReactNode }): ReactNode {
   const [data, setData] = useState<AppData | null>(null)
   const [timer, setTimer] = useState<TimerState | null>(null)
-  const [page, setPage] = useState<Page>('planner')
+  const [page, setPage] = useState<Page>('goals')
 
   useEffect(() => {
     const offData = api.onData(setData)

@@ -2,7 +2,7 @@ import type { TimerCommand } from './host'
 import type { StoreOp } from './store'
 import type { AppData, TimerState } from './types'
 
-export type ConnectorState = 'connected' | 'notConnected' | 'needsUpdate' | 'claudeMissing' | 'portable' | 'unavailable'
+export type ConnectorState = 'connected' | 'notConnected' | 'needsUpdate' | 'claudeMissing' | 'portable' | 'moveToApplications' | 'unavailable'
 
 /** Whether the Claude desktop app is set up to use Study Tracker's connector. */
 export interface ConnectorStatus {

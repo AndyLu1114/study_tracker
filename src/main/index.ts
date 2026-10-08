@@ -9,6 +9,7 @@ import type { AppData, TimerState } from '../shared/types'
 import { debouncedWriter, readJson, writeJsonAtomic } from '../node/persistence'
 import { startBridgeServer } from '../node/bridge'
 import { connectClaude, connectorStatus, disconnectClaude } from './claudeConnector'
+import { isMac, offerMoveToApplications, setMacMenu } from './mac'
 
 const APP_ID = 'com.andylu.studytracker'
 
@@ -50,8 +51,9 @@ function createMainWindow(): void {
   mainWindow.once('ready-to-show', () => mainWindow?.show())
   mainWindow.on('closed', () => {
     mainWindow = null
-    // Closing the main window quits the app, mini clock included.
-    miniWindow?.close()
+    // On Windows, closing the main window quits the app, mini clock included.
+    // On macOS the app (and its timer) keeps running in the Dock.
+    if (!isMac) miniWindow?.close()
   })
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url)
@@ -84,6 +86,8 @@ function openMini(): void {
     webPreferences: { preload: join(__dirname, '../preload/index.js'), sandbox: false }
   })
   miniWindow.setAlwaysOnTop(true, 'floating')
+  // Keep the timer visible on every desktop (Space), even over full-screen apps.
+  if (isMac) miniWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
   miniWindow.on('closed', () => (miniWindow = null))
   loadRenderer(miniWindow, '/mini')
 }
@@ -195,12 +199,21 @@ app.on('second-instance', () => showMain())
 app.whenReady().then(() => {
   if (!isFirstInstance) return
   // Required on Windows for notifications to show the app name.
-  app.setAppUserModelId(APP_ID)
+  if (process.platform === 'win32') app.setAppUserModelId(APP_ID)
+  if (isMac) setMacMenu()
   setupHost()
   createMainWindow()
+  offerMoveToApplications(host.data.settings.language)
+})
+
+// macOS: clicking the Dock icon with no window open brings it back.
+app.on('activate', () => {
+  if (isFirstInstance && host) showMain()
 })
 
 app.on('window-all-closed', () => {
+  // macOS apps stay running until Cmd+Q, so the timer keeps going.
+  if (isMac) return
   host?.dispose()
   app.quit()
 })

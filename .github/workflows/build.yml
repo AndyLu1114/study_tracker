@@ -32,9 +32,41 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run dist:win
+      - name: Smoke test the packaged app
+        run: npm run smoke -- "dist/win-unpacked/Study Tracker.exe"
       - uses: actions/upload-artifact@v4
         with:
           name: StudyTracker-windows
           path: |
             dist/*.exe
+          if-no-files-found: error
+
+  mac:
+    needs: check
+    runs-on: macos-latest
+    env:
+      # The app is signed "ad-hoc" (no certificate, no secrets involved), so
+      # allow it on pull requests too: an unsigned build won't launch on Apple Silicon.
+      CSC_FOR_PULL_REQUEST: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run dist:mac
+      - name: Check signature and architectures
+        run: |
+          APP="dist/mac-universal/Study Tracker.app"
+          codesign --verify --deep --strict --verbose=2 "$APP"
+          codesign -dv "$APP" 2>&1 | grep -E "Identifier|Signature"
+          lipo -archs "$APP/Contents/MacOS/Study Tracker"
+      - name: Smoke test the packaged app
+        run: npm run smoke -- "dist/mac-universal/Study Tracker.app/Contents/MacOS/Study Tracker"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: StudyTracker-macos
+          path: |
+            dist/*.dmg
           if-no-files-found: error

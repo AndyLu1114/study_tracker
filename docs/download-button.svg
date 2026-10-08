@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="350" height="44" viewBox="0 0 350 44" role="img" aria-label="Download for Windows and macOS">
+  <title>Download for Windows and macOS</title>
+  <rect width="350" height="44" rx="10" fill="#1f8a5b"/>
+  <path d="M196 0h144a10 10 0 0 1 10 10v24a10 10 0 0 1-10 10H196z" fill="#17663f"/>
+  <g fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" transform="translate(18 12)">
+    <path d="M10 2v13M4.5 9.5 10 15l5.5-5.5M3 19h14"/>
+  </g>
+  <text x="46" y="28" fill="#fff" font-family="-apple-system, 'Segoe UI', 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', Helvetica, Arial, sans-serif" font-size="16" font-weight="700">Download · 下載</text>
+  <text x="273" y="28" fill="#fff" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="600">Windows | macOS</text>
+</svg>

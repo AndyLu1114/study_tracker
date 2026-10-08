@@ -12,7 +12,11 @@
 </p>
 
 <p align="center">
-  <a href="#en"><b>English</b></a> &nbsp;·&nbsp; <a href="#zh"><b>繁體中文</b></a>
+  <a href="https://github.com/AndyLu1114/study_tracker/releases/latest"><img src="docs/download-button.svg" width="350" alt="Download for Windows and macOS"></a>
+</p>
+
+<p align="center">
+  <a href="#en"><b>English</b></a> &nbsp;·&nbsp; <a href="#zh"><b>繁體中文</b></a> &nbsp;|&nbsp; <a href="#download">How to install</a> &nbsp;·&nbsp; <a href="#zh-download">安裝說明</a>
 </p>
 
 <p align="center">
@@ -121,6 +125,8 @@ Works with the installer version (not the portable one), with the Claude desktop
 - Silent notifications when a countdown ends or a pomodoro phase changes
 - Export / import everything as one JSON backup file
 - **Private by design**: no account, no cloud. Everything stays on your PC.
+
+<a id="download"></a>
 
 ### Download & install
 
@@ -243,6 +249,8 @@ Claude 使用讀書紀錄前會先徵求你的同意。它可以讀取目標、�
 - 倒數結束或番茄鐘切換階段時，顯示無聲的系統通知
 - 所有資料可匯出／匯入成一個 JSON 備份檔
 - **重視隱私**：不需註冊帳號、不上雲端，所有資料都存在你自己的電腦裡
+
+<a id="zh-download"></a>
 
 ### 下載與安裝
 

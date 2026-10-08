@@ -14,7 +14,9 @@
     "web": "vite --config vite.web.config.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
-    "dist:win": "npm run build && electron-builder --win --publish never"
+    "dist:win": "npm run build && electron-builder --win --publish never",
+    "dist:mac": "npm run build && electron-builder --mac --publish never",
+    "smoke": "node scripts/smoke-packaged.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.52.0",
@@ -31,6 +33,7 @@
     "electron-builder": "^26.15.3",
     "electron-vite": "^5.0.0",
     "esbuild": "^0.28.2",
+    "playwright-core": "1.56",
     "typescript": "^7.0.2",
     "vite": "^7.3.6",
     "vitest": "^3.2.7",

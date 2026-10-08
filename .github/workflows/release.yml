@@ -1,0 +1,90 @@
+name: Release
+
+# Actions > Release > Run workflow (on main), enter a version such as 0.1.0.
+# Builds and tests Windows and macOS, then publishes a GitHub Release with the
+# installers attached. Anyone can download them, no GitHub account needed.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish, e.g. 0.1.0'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the version and branch
+        env:
+          VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::The version must look like 0.1.0 (got '$VERSION')."
+            exit 1
+          fi
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "::error::Run the release from the main branch."
+            exit 1
+          fi
+          if gh release view "v$VERSION" --repo "$REPO" >/dev/null 2>&1; then
+            echo "::error::Release v$VERSION already exists. Published releases can't be changed; use a new version number."
+            exit 1
+          fi
+
+  build:
+    needs: prepare
+    uses: ./.github/workflows/build.yml
+    with:
+      version: ${{ inputs.version }}
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Publish the release
+        env:
+          VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          ls -l artifacts
+          {
+            cat <<EOF
+          ## Download
+
+          | Computer | File |
+          |---|---|
+          | Windows 10 / 11 | **StudyTracker-Setup-$VERSION.exe** (installer) or StudyTracker-Portable-$VERSION.exe (no install) |
+          | Mac (Apple Silicon and Intel) | **StudyTracker-$VERSION-mac.dmg** |
+
+          **First launch**
+          - Windows: if you see "Windows protected your PC", click **More info → Run anyway**.
+          - Mac: drag the app into **Applications**, open it, and if macOS blocks it, go to **System Settings → Privacy & Security → Open Anyway**.
+
+          **首次開啟**
+          - Windows：出現「Windows 已保護您的電腦」時，點「**其他資訊 → 仍要執行**」。
+          - Mac：把 App 拖到「**應用程式**」後開啟；若被阻擋，到「**系統設定 → 隱私權與安全性 → 強制打開**」。
+
+          EOF
+            gh api "repos/$REPO/releases/generate-notes" -f tag_name="v$VERSION" -f target_commitish="$GITHUB_SHA" --jq .body
+          } > notes.md
+          # Published releases are immutable, so attach every file to a draft first, then publish.
+          gh release create "v$VERSION" artifacts/*.exe artifacts/*.dmg \
+            --repo "$REPO" --draft --target "$GITHUB_SHA" \
+            --title "Study Tracker $VERSION" --notes-file notes.md
+          gh release edit "v$VERSION" --repo "$REPO" --draft=false --latest
+          echo "Published: https://github.com/$REPO/releases/tag/v$VERSION"

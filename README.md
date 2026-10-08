@@ -5,14 +5,18 @@
 <h1 align="center">Study Tracker · 讀書紀錄</h1>
 
 <p align="center">
-  A calm little Windows app to set study goals, plan sessions, time them, and see your progress,<br>
+  A calm little Windows and Mac app to set study goals, plan sessions, time them, and see your progress,<br>
   focused on the next few days rather than months of history.<br><br>
-  一個簡潔的 Windows 讀書小幫手：設定目標、規劃讀書計畫、計時、追蹤進度，<br>
+  一個簡潔的 Windows／Mac 讀書小幫手：設定目標、規劃讀書計畫、計時、追蹤進度，<br>
   只專注在眼前這幾天。
 </p>
 
 <p align="center">
-  <a href="#en"><b>English</b></a> &nbsp;·&nbsp; <a href="#zh"><b>繁體中文</b></a>
+  <a href="https://github.com/AndyLu1114/study_tracker/releases/latest"><img src="docs/download-button.svg" width="350" alt="Download for Windows and macOS"></a>
+</p>
+
+<p align="center">
+  <a href="#en"><b>English</b></a> &nbsp;·&nbsp; <a href="#zh"><b>繁體中文</b></a> &nbsp;|&nbsp; <a href="#download">How to install</a> &nbsp;·&nbsp; <a href="#zh-download">安裝說明</a>
 </p>
 
 <p align="center">
@@ -117,24 +121,29 @@ Works with the installer version (not the portable one), with the Claude desktop
 #### ✨ And also
 
 - English and 繁體中文 interface
-- Light, dark, or follow your Windows setting
-- Silent Windows notifications when a countdown ends or a pomodoro phase changes
+- Light, dark, or follow your system setting
+- Silent notifications when a countdown ends or a pomodoro phase changes
 - Export / import everything as one JSON backup file
 - **Private by design**: no account, no cloud. Everything stays on your PC.
 
+<a id="download"></a>
+
 ### Download & install
 
-> Requires Windows 10 or 11 (64-bit).
+Download the file for your computer from the [**latest release**](https://github.com/AndyLu1114/study_tracker/releases/latest). No GitHub account needed.
 
-1. Open the [**Actions → Build**](https://github.com/AndyLu1114/study_tracker/actions/workflows/build.yml) page, click the newest run with a green ✓, and download **StudyTracker-windows** under *Artifacts* (you need to be signed in to GitHub).
-2. Unzip it. You will find two files; use either one:
-   - `StudyTracker-Setup-x.y.z.exe`: installs the app with a Start menu shortcut
-   - `StudyTracker-Portable-x.y.z.exe`: runs straight away, no installation
-3. If Windows shows *"Windows protected your PC"*, click **More info → Run anyway**. This appears because the app is not code-signed.
+**Windows 10 / 11**
+- `StudyTracker-Setup-x.y.z.exe` installs the app with a Start menu shortcut (needed for the Claude connector).
+- `StudyTracker-Portable-x.y.z.exe` runs straight away, without installing.
+- If Windows shows *"Windows protected your PC"*, click **More info → Run anyway**. This appears because the app is not code-signed.
+
+**Mac** (Apple Silicon and Intel)
+- Open `StudyTracker-x.y.z-mac.dmg` and drag **Study Tracker** into **Applications**.
+- The first time you open it, macOS may block it because it isn't from an identified developer. Go to **System Settings → Privacy & Security** and click **Open Anyway**. You only need to do this once.
 
 ### Your data
 
-Everything is saved in `%APPDATA%\Study Tracker\study-data.json` on your own computer. Uninstalling the app does not delete it. To move to a new PC or keep a backup, use **Settings → Backup → Export**, then **Import** on the other machine.
+Everything is saved on your own computer: `%APPDATA%\Study Tracker\study-data.json` on Windows, `~/Library/Application Support/Study Tracker/study-data.json` on Mac. Uninstalling the app does not delete it. To move to a new PC or keep a backup, use **Settings → Backup → Export**, then **Import** on the other machine.
 
 ---
 
@@ -236,24 +245,29 @@ Claude 使用讀書紀錄前會先徵求你的同意。它可以讀取目標、�
 #### ✨ 其他
 
 - 英文／繁體中文介面
-- 淺色、深色，或跟隨 Windows 設定
-- 倒數結束或番茄鐘切換階段時，顯示無聲的 Windows 通知
+- 淺色、深色，或跟隨系統設定
+- 倒數結束或番茄鐘切換階段時，顯示無聲的系統通知
 - 所有資料可匯出／匯入成一個 JSON 備份檔
 - **重視隱私**：不需註冊帳號、不上雲端，所有資料都存在你自己的電腦裡
 
+<a id="zh-download"></a>
+
 ### 下載與安裝
 
-> 系統需求：Windows 10 或 11（64 位元）
+到 [**最新版本**](https://github.com/AndyLu1114/study_tracker/releases/latest) 下載適合你電腦的檔案，不需要 GitHub 帳號。
 
-1. 打開 [**Actions → Build**](https://github.com/AndyLu1114/study_tracker/actions/workflows/build.yml) 頁面，點選最新一次有綠色 ✓ 的執行紀錄，在下方 *Artifacts* 下載 **StudyTracker-windows**（需要登入 GitHub）。
-2. 解壓縮後會看到兩個檔案，擇一使用即可：
-   - `StudyTracker-Setup-x.y.z.exe`：安裝版，會建立開始功能表捷徑
-   - `StudyTracker-Portable-x.y.z.exe`：免安裝版，點兩下直接使用
-3. 如果出現「**Windows 已保護您的電腦**」，請點「**其他資訊 → 仍要執行**」。這是因為程式沒有數位簽章。
+**Windows 10 / 11**
+- `StudyTracker-Setup-x.y.z.exe`：安裝版，會建立開始功能表捷徑（使用 Claude 連接器需安裝版）。
+- `StudyTracker-Portable-x.y.z.exe`：免安裝版，點兩下直接使用。
+- 如果出現「**Windows 已保護您的電腦**」，請點「**其他資訊 → 仍要執行**」。這是因為程式沒有數位簽章。
+
+**Mac**（Apple Silicon 與 Intel 皆可）
+- 打開 `StudyTracker-x.y.z-mac.dmg`，把 **Study Tracker** 拖到「**應用程式**」。
+- 第一次開啟時，macOS 可能會因為不是來自已識別的開發者而阻擋。請到「**系統設定 → 隱私權與安全性**」點「**強制打開**」，只需要做一次。
 
 ### 資料存放
 
-所有資料都存在你電腦裡的 `%APPDATA%\Study Tracker\study-data.json`，解除安裝也不會刪除。要換電腦或備份時，請到「**設定 → 備份 → 匯出**」，再到新電腦上「**匯入**」。
+所有資料都存在你自己的電腦裡：Windows 在 `%APPDATA%\Study Tracker\study-data.json`，Mac 在 `~/Library/Application Support/Study Tracker/study-data.json`。解除安裝也不會刪除。要換電腦或備份時，請到「**設定 → 備份 → 匯出**」，再到新電腦上「**匯入**」。
 
 ---
 
@@ -268,9 +282,11 @@ npm run web        # run the UI in a browser at http://localhost:5199 (data in l
 npm test           # unit tests
 npm run typecheck
 npm run dist:win   # build the Windows installer (run on Windows)
+npm run dist:mac   # build the universal Mac .dmg (run on a Mac)
+npm run smoke -- <path to packaged app executable>   # launch a packaged build and check it
 ```
 
-Every push runs the tests and builds the Windows app on GitHub Actions ([`build.yml`](.github/workflows/build.yml)).
+Every push runs the tests, builds the Windows and Mac apps, and smoke-tests them on GitHub Actions ([`build.yml`](.github/workflows/build.yml)). To publish a version, run **Actions → Release → Run workflow** on `main` with a version number ([`release.yml`](.github/workflows/release.yml)).
 
 ```
 src/

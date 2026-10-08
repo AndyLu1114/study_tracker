@@ -7,6 +7,7 @@ import { homedir } from 'node:os'
 import { join } from 'node:path'
 import type { ConnectorStatus } from '../shared/api'
 import { writeJsonAtomic } from '../node/persistence'
+import { isTranslocated } from './mac'
 
 const KEY = 'study-tracker'
 const FILE = 'claude_desktop_config.json'
@@ -71,6 +72,7 @@ const sameEntry = (a: unknown, b: ServerEntry): boolean => {
 
 export function connectorStatus(): ConnectorStatus {
   if (process.env.PORTABLE_EXECUTABLE_DIR) return { state: 'portable' }
+  if (isTranslocated()) return { state: 'moveToApplications' }
   const dirs = claudeDirs()
   if (dirs.length === 0) return { state: 'claudeMissing' }
   const want = entry()
@@ -91,7 +93,7 @@ export function connectorStatus(): ConnectorStatus {
 
 export function connectClaude(): ConnectorStatus {
   const status = connectorStatus()
-  if (status.state === 'portable' || status.state === 'claudeMissing') return status
+  if (status.state === 'portable' || status.state === 'claudeMissing' || status.state === 'moveToApplications') return status
   if (!existsSync(scriptPath())) return { ...status, error: `Connector file is missing: ${scriptPath()}` }
   try {
     for (const dir of claudeDirs()) {

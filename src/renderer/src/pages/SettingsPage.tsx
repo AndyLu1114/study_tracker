@@ -202,6 +202,7 @@ function ClaudeConnector(): ReactNode {
     needsUpdate: t('connector.needsUpdate'),
     claudeMissing: t('connector.claudeMissing'),
     portable: t('connector.portable'),
+    moveToApplications: t('connector.moveToApplications'),
     unavailable: t('connector.unavailable')
   }[state]
 

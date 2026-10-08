@@ -4,6 +4,13 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  # The Release workflow reuses these builds, stamped with its version number.
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        required: false
+        default: ''
 
 jobs:
   check:
@@ -31,6 +38,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Set the release version
+        if: inputs.version
+        shell: bash
+        run: npm version "${{ inputs.version }}" --no-git-tag-version --allow-same-version
       - run: npm run dist:win
       - name: Smoke test the packaged app
         timeout-minutes: 6
@@ -56,6 +67,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Set the release version
+        if: inputs.version
+        shell: bash
+        run: npm version "${{ inputs.version }}" --no-git-tag-version --allow-same-version
       - run: npm run dist:mac
       - name: Check signature and architectures
         run: |

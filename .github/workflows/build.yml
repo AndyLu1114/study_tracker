@@ -33,6 +33,7 @@ jobs:
       - run: npm ci
       - run: npm run dist:win
       - name: Smoke test the packaged app
+        timeout-minutes: 6
         run: npm run smoke -- "dist/win-unpacked/Study Tracker.exe"
       - uses: actions/upload-artifact@v4
         with:
@@ -63,6 +64,7 @@ jobs:
           codesign -dv "$APP" 2>&1 | grep -E "Identifier|Signature"
           lipo -archs "$APP/Contents/MacOS/Study Tracker"
       - name: Smoke test the packaged app
+        timeout-minutes: 6
         run: npm run smoke -- "dist/mac-universal/Study Tracker.app/Contents/MacOS/Study Tracker"
       - uses: actions/upload-artifact@v4
         with:

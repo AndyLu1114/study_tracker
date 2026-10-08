@@ -20,11 +20,22 @@ function check(ok, what) {
   if (!ok) process.exitCode = 1
 }
 
+// Never hang CI: report where we got stuck instead.
+let stage = 'starting'
+setTimeout(() => {
+  console.log(`FAIL timed out while: ${stage}`)
+  process.exit(1)
+}, 180_000).unref()
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 // 1. The app window.
 const userData = mkdtempSync(join(tmpdir(), 'st-smoke-'))
 // Skip the macOS "Move to Applications?" prompt; CI builds don't live there.
 writeFileSync(join(userData, 'mac-prefs.json'), JSON.stringify({ dontAskMove: true }))
+stage = 'launching the app'
 const app = await electron.launch({ executablePath: exe, args: [`--user-data-dir=${userData}`] })
+const proc = app.process()
+const exited = new Promise((resolve) => proc.once('exit', () => resolve(true)))
 const win = await app.firstWindow()
 const errors = []
 win.on('pageerror', (e) => errors.push(e.message))
@@ -36,9 +47,22 @@ await win.locator('.nav-item').nth(5).click()
 await win.waitForSelector('.connector-state', { timeout: 10_000 })
 console.log(`     connector status: ${await win.locator('.connector-state').textContent()}`)
 check(errors.length === 0, `no page errors ${errors.join('; ')}`)
-await app.close()
+
+// Close the window like a user clicking its close button.
+stage = 'closing the window'
+await win.close()
+if (process.platform === 'darwin') {
+  // macOS apps keep running in the Dock after their last window closes; quit like Cmd+Q.
+  await sleep(1000)
+  check(proc.exitCode === null, 'app stays in the Dock after its window closes')
+  await app.evaluate(({ app }) => app.quit()).catch(() => {})
+}
+const quit = await Promise.race([exited, sleep(15_000).then(() => false)])
+check(quit, process.platform === 'darwin' ? 'app quits with Cmd+Q' : 'app quits when its window is closed')
+if (!quit) proc.kill()
 
 // 2. The Claude connector, started the way Claude desktop starts it.
+stage = 'running the Claude connector'
 const transport = new StdioClientTransport({
   command: exe,
   args: [connector, '--data-dir', userData],
@@ -54,3 +78,6 @@ check(!res.isError, 'connector can create a goal')
 await client.close()
 const saved = JSON.parse(readFileSync(join(userData, 'study-data.json'), 'utf8'))
 check(saved.goals.some((g) => g.title === 'Smoke test goal'), 'the goal was saved to the data file')
+
+// Don't let leftover handles keep CI waiting.
+process.exit(process.exitCode ?? 0)
